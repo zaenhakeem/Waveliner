@@ -23,14 +23,13 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+
 # =========================
 # INITIALIZE DATABASE
 # =========================
 
 def init_db():
-
     conn = sqlite3.connect("quality.db")
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -59,18 +58,12 @@ def init_db():
     conn.commit()
     conn.close()
 
+
 # =========================
 # SAVE REPORT
 # =========================
 
-def save_report_to_db(
-    report_date,
-    group_name,
-    declared_total,
-    actual_total,
-    results
-):
-
+def save_report_to_db(report_date, group_name, declared_total, actual_total, results):
     conn = get_db()
     cur = conn.cursor()
 
@@ -78,17 +71,11 @@ def save_report_to_db(
         INSERT INTO reports
         (report_date, group_name, declared_total, actual_total)
         VALUES (?,?,?,?)
-    """, (
-        report_date,
-        group_name,
-        declared_total,
-        actual_total
-    ))
+    """, (report_date, group_name, declared_total, actual_total))
 
     report_id = cur.lastrowid
 
     for row in results:
-
         cur.execute("""
             INSERT INTO report_details
             (report_id, agent_name, serial_number, usage, commission, status)
@@ -104,7 +91,6 @@ def save_report_to_db(
 
     conn.commit()
     conn.close()
-
     return report_id
 
 
@@ -113,7 +99,6 @@ def save_report_to_db(
 # =========================
 
 def get_previous_usage(serial):
-
     conn = get_db()
     cur = conn.cursor()
 
@@ -128,50 +113,40 @@ def get_previous_usage(serial):
 
     row = cur.fetchone()
     conn.close()
-
     return row
 
 
 # =========================
 # BUILD SUMMARY HELPER
-# Used by both process_report and export route
 # =========================
 
 def build_summary(results_df):
-
     summary = []
 
     if results_df.empty:
         return summary
 
     for agent in sorted(results_df['Agent'].dropna().unique()):
-
         agent_df = results_df[results_df['Agent'] == agent]
 
-        # A row is QUALITY only if it contains "QUALITY" but NOT "NON QUALITY"
         quality_mask = (
             agent_df['Status'].str.contains("QUALITY") &
             ~agent_df['Status'].str.contains("NON QUALITY")
         )
-
         non_quality_mask = agent_df['Status'].str.contains("NON QUALITY")
         not_found_mask   = agent_df['Status'].str.contains("NOT FOUND")
 
         summary.append({
-            'agent':       agent,
-            'total':       len(agent_df),
-            'quality':     len(agent_df[quality_mask]),
+            'agent': agent,
+            'total': len(agent_df),
+            'quality': len(agent_df[quality_mask]),
             'non_quality': len(agent_df[non_quality_mask]),
-            'not_found':   len(agent_df[not_found_mask]),
-
+            'not_found': len(agent_df[not_found_mask]),
             'non_quality_serials': [
-                str(x)[-6:]
-                for x in agent_df[non_quality_mask]['Serial Number']
+                str(x)[-6:] for x in agent_df[non_quality_mask]['Serial Number']
             ],
-
             'not_found_serials': [
-                str(x)[-6:]
-                for x in agent_df[not_found_mask]['Serial Number']
+                str(x)[-6:] for x in agent_df[not_found_mask]['Serial Number']
             ]
         })
 
@@ -182,41 +157,29 @@ def build_summary(results_df):
 # PROCESS REPORT
 # =========================
 
-def process_report(df, report_text):
-
+def process_report(df, report_text, report_date, group_name, declared_total, ignore_previous=False):
+    # Clean Excel columns
     df.columns = df.columns.str.strip()
-
     df['Sim Serial Number'] = df['Sim Serial Number'].astype(str).str.strip()
     df['Cumulative Usage'] = pd.to_numeric(df['Cumulative Usage'], errors='coerce')
     df['Cumulative Commission'] = pd.to_numeric(df['Cumulative Commission'], errors='coerce')
 
-    # META DATA
-
-    date_match = re.search(r'\d{2}/\d{2}/\d{4}', report_text)
-    report_date = date_match.group() if date_match else "Unknown Date"
-
-    group_match = re.search(r'\d{2}/\d{2}/\d{4}\s+report\s+(.+)', report_text, re.IGNORECASE)
-    group_name = group_match.group(1).strip() if group_match else "Unknown Group"
-
-    total_match = re.search(r'Total\s+lines\s+activated\s*-\s*(\d+)', report_text, re.IGNORECASE)
-    declared_total = int(total_match.group(1)) if total_match else 0
-
-    # PARSE REPORT
-
+    # Parse agent lines and serial numbers from the report text
     records = []
     current_agent = None
 
     for line in report_text.splitlines():
-
         line = line.strip()
         if not line:
             continue
 
-        agent_match = re.match(r'^([A-Za-z ]+)\s*-\s*\d+$', line)
+        # Match lines like "Victoria-25" or "Victoria - 25"
+        agent_match = re.match(r'^([A-Za-z ]+)\s*[-–]\s*\d+$', line)
         if agent_match:
             current_agent = agent_match.group(1).strip()
             continue
 
+        # Assume a 20‑digit number is a serial
         if re.fullmatch(r'\d{20}', line):
             records.append({
                 'Agent': current_agent,
@@ -225,27 +188,27 @@ def process_report(df, report_text):
 
     actual_total = len(records)
 
-    # DUPLICATE TRACKING
+    # Process each serial
     seen = set()
     results = []
 
     for rec in records:
-
         serial = rec['Serial Number']
-
         duplicate_in_report = serial in seen
         seen.add(serial)
 
         match = df[df['Sim Serial Number'] == serial]
-        prev = get_previous_usage(serial)
+
+        # Skip previous usage check if ignore_previous is True
+        if ignore_previous:
+            prev = None
+        else:
+            prev = get_previous_usage(serial)
 
         if match.empty:
-
             status = "NOT FOUND"
-
             if duplicate_in_report:
                 status = "DUPLICATE IN REPORT + NOT FOUND"
-
             results.append({
                 'Agent': rec['Agent'],
                 'Serial Number': serial,
@@ -253,27 +216,26 @@ def process_report(df, report_text):
                 'Commission': '',
                 'Status': status
             })
-
             continue
 
         row = match.iloc[0]
-
         usage = row['Cumulative Usage']
         commission = row['Cumulative Commission']
 
         quality = (
-            pd.notna(usage)
-            and pd.notna(commission)
-            and usage >= 50
-            and commission >= 300
+            pd.notna(usage) and pd.notna(commission)
+            and usage >= 50 and commission >= 300
         )
 
         base_status = "QUALITY" if quality else "NON QUALITY"
 
-        if prev:
-            status = f"ALREADY USED + {base_status}"
-        else:
+        if ignore_previous:
             status = base_status
+        else:
+            if prev:
+                status = f"ALREADY USED + {base_status}"
+            else:
+                status = base_status
 
         if duplicate_in_report:
             status = f"DUPLICATE IN REPORT + {status}"
@@ -286,7 +248,7 @@ def process_report(df, report_text):
             'Status': status
         })
 
-    # SAVE DB
+    # Save to database
     report_id = save_report_to_db(
         report_date,
         group_name,
@@ -295,15 +257,11 @@ def process_report(df, report_text):
         results
     )
 
-    # BUILD SUMMARY
+    # Build summary
     results_df = pd.DataFrame(results)
     summary = build_summary(results_df)
 
-    # =========================
-    # ACCURATE TOP-CARD COUNTS
-    # Uses same logic as summary so reused/duplicate serials are handled correctly
-    # =========================
-
+    # Top‑card counts (using same logic as summary)
     if not results_df.empty:
         quality_count = len(results_df[
             results_df['Status'].str.contains("QUALITY") &
@@ -343,9 +301,16 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
-
     excel_file = request.files['excel_file']
     report_text = request.form['report_text']
+
+    # Read manual metadata from form
+    report_date = request.form['report_date']          # YYYY-MM-DD
+    group_name = request.form['group_name'].strip()
+    declared_total = int(request.form['declared_total'])
+
+    # Checkbox: '1' if checked, else None
+    ignore_previous = request.form.get('ignore_previous') == '1'
 
     filepath = os.path.join(UPLOAD_FOLDER, excel_file.filename)
     excel_file.save(filepath)
@@ -363,7 +328,7 @@ def process():
         quality_count,
         non_quality_count,
         not_found_count
-    ) = process_report(df, report_text)
+    ) = process_report(df, report_text, report_date, group_name, declared_total, ignore_previous)
 
     return render_template(
         'results.html',
@@ -381,13 +346,8 @@ def process():
     )
 
 
-# =========================
-# FIXED EXPORT ROUTE
-# =========================
-
 @app.route('/export/<int:report_id>')
 def export(report_id):
-
     conn = get_db()
     cur = conn.cursor()
 
@@ -399,7 +359,6 @@ def export(report_id):
 
     conn.close()
 
-    # Convert sqlite rows to dicts
     details = [
         {
             "Agent": r["agent_name"],
@@ -411,7 +370,6 @@ def export(report_id):
         for r in rows
     ]
 
-    # Rebuild summary from details so Word export has a populated summary section
     details_df = pd.DataFrame(details)
     export_summary = build_summary(details_df)
 
@@ -428,9 +386,9 @@ def export(report_id):
 
     return send_file(file_path, as_attachment=True)
 
+
 @app.route('/all-dates')
 def all_dates():
-
     conn = get_db()
     cur = conn.cursor()
 
@@ -445,13 +403,12 @@ def all_dates():
 
     return render_template("all_dates.html", rows=rows)
 
+
 @app.route('/history', methods=['GET', 'POST'])
 def history():
-
     conn = get_db()
     cur = conn.cursor()
 
-    # Get all unique dates for dropdown
     cur.execute("""
         SELECT DISTINCT report_date
         FROM reports
@@ -464,7 +421,6 @@ def history():
     details = []
 
     if request.method == 'POST':
-
         selected_date = request.form['report_date']
 
         cur.execute("""
@@ -498,6 +454,10 @@ def history():
         details=details
     )
 
+
+# =========================
+# START APP
+# =========================
 
 init_db()
 

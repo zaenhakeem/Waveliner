@@ -41,8 +41,8 @@ def generate_word_report(
     hdr_cells = table.rows[0].cells
     hdr_cells[0].text = 'Agent'
     hdr_cells[1].text = 'Total Submitted'
-    hdr_cells[2].text = 'Non‑Quality Serials (last 5)'
-    hdr_cells[3].text = 'Not Found Serials (last 5)'
+    hdr_cells[2].text = 'Non‑Quality Serials (last 6)'   # <-- changed to 6
+    hdr_cells[3].text = 'Not Found Serials (last 6)'      # <-- changed to 6
 
     # Populate rows from summary
     for agent_info in summary:

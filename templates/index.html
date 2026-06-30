@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Claypole Trading ltd | Quality Line Checker</title>
-    <!-- Bootstrap 5 + Icons + Google Fonts for professional look -->
+    <!-- Bootstrap 5 + Icons + Google Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
@@ -22,7 +22,6 @@
             padding: 2rem 1rem;
         }
 
-        /* refined card styling */
         .card-main {
             border: none;
             border-radius: 32px;
@@ -36,7 +35,6 @@
             box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.15);
         }
 
-        /* brand header area */
         .brand-bar {
             background: #0B2B40;
             padding: 1rem 2rem;
@@ -72,12 +70,15 @@
             vertical-align: middle;
         }
 
-        /* main content padding */
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: #fff;
+        }
+
         .card-body-custom {
             padding: 2rem 2rem 2.5rem 2rem;
         }
 
-        /* headings */
         .page-title {
             font-weight: 700;
             font-size: 1.85rem;
@@ -103,7 +104,6 @@
             font-size: 1rem;
         }
 
-        /* form styling */
         .form-label {
             font-weight: 600;
             font-size: 0.9rem;
@@ -133,7 +133,6 @@
             line-height: 1.5;
         }
 
-        /* button modern */
         .btn-primary-custom {
             background: #0B2B40;
             border: none;
@@ -159,7 +158,6 @@
             transform: translateY(1px);
         }
 
-        /* alert styling */
         .alert-custom {
             border-radius: 20px;
             background-color: #fee9e6;
@@ -170,7 +168,6 @@
             margin-bottom: 1.8rem;
         }
 
-        /* loader overlay professional */
         .loader-overlay {
             display: none;
             position: fixed;
@@ -227,7 +224,6 @@
             margin-bottom: 0;
         }
 
-        /* footer subtle */
         .footer-note {
             text-align: center;
             margin-top: 1.5rem;
@@ -237,7 +233,6 @@
             letter-spacing: 0.2px;
         }
 
-        /* responsive touches */
         @media (max-width: 768px) {
             .card-body-custom {
                 padding: 1.5rem;
@@ -254,7 +249,6 @@
             }
         }
 
-        /* file input nice */
         input[type="file"]::file-selector-button {
             border-radius: 40px;
             border: none;
@@ -267,6 +261,15 @@
         input[type="file"]::file-selector-button:hover {
             background: #e0e7f0;
         }
+
+        .form-check-input:checked {
+            background-color: #0B2B40;
+            border-color: #0B2B40;
+        }
+        .form-check-label {
+            font-weight: 500;
+            color: #1e2f3e;
+        }
     </style>
 </head>
 <body>
@@ -274,22 +277,23 @@
 <div class="container py-2 py-md-3">
     <div class="row justify-content-center">
         <div class="col-lg-10 col-xl-9">
-            <!-- MAIN CARD with integrated professional branding -->
             <div class="card-main">
-                <!-- Company header - Claypole Trading ltd prominent -->
+                <!-- Brand bar with History link -->
                 <div class="brand-bar d-flex justify-content-between align-items-center flex-wrap">
                     <div class="brand-name">
                         <i class="bi bi-briefcase-fill" style="font-size: 1.6rem;"></i>
                         Claypole Trading ltd
                     </div>
-                    <div class="footer-note">
-                        <i class="bi bi-dot"></i> Claypole Trading ltd — quality assurance & compliance solutions  
-                        <i class="bi bi-dot"></i> <a href="/history" style="color: #F4C542; text-decoration: none;">View History</a>
+                    <div class="d-flex align-items-center gap-2">
+                        
+                        <a href="/history" class="btn btn-sm btn-outline-light" 
+                           style="border-radius: 40px; border-color: rgba(255,255,255,0.3); color: white; padding: 0.3rem 1rem; font-weight: 500; text-decoration: none;">
+                            <i class="bi bi-clock-history"></i> History
+                        </a>
                     </div>
                 </div>
 
                 <div class="card-body-custom">
-                    <!-- Title + quality checker context -->
                     <div class="page-title">
                         <i class="bi bi-check2-square"></i>
                         Quality Line Checker
@@ -298,7 +302,6 @@
                         Intelligent serial validation & activation analysis — ensure every unit meets quality standards.
                     </div>
 
-                    <!-- dynamic error handling from backend (Jinja2 style) -->
                     {% if error %}
                     <div class="alert alert-custom" role="alert">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -307,7 +310,7 @@
                     {% endif %}
 
                     <form id="reportForm" action="/process" method="POST" enctype="multipart/form-data">
-                        <!-- Excel file upload section with icon & hint -->
+                        <!-- Excel file upload -->
                         <div class="mb-4">
                             <label class="form-label">
                                 <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Excel Dataset
@@ -318,20 +321,55 @@
                             </div>
                         </div>
 
-                        <!-- Report text area: activation logs or report -->
+                        <!-- NEW: Manual metadata fields -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">
+                                    <i class="bi bi-calendar-event"></i> Report Date
+                                </label>
+                                <input type="date" name="report_date" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">
+                                    <i class="bi bi-tag"></i> Group Name
+                                </label>
+                                <input type="text" name="group_name" class="form-control" placeholder="e.g. RAVINE" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">
+                                    <i class="bi bi-hash"></i> Declared Total
+                                </label>
+                                <input type="number" name="declared_total" class="form-control" placeholder="e.g. 70" required min="0">
+                            </div>
+                        </div>
+
+                        <!-- NEW: Ignore previous usage checkbox -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="ignore_previous" name="ignore_previous" value="1">
+                                <label class="form-check-label" for="ignore_previous">
+                                    <i class="bi bi-arrow-repeat"></i> Rerun (ignore previous usage check)
+                                </label>
+                                <div class="form-text text-muted">
+                                    Check this if you are re‑processing the same serials and don’t want “ALREADY USED” status.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Report text area -->
                         <div class="mb-4">
                             <label class="form-label">
                                 <i class="bi bi-file-text-fill me-1"></i> Activation Report
                             </label>
                             <textarea name="report_text" rows="16" class="form-control" 
-                                      placeholder="Paste your activation report, line checker logs, or serial validation data here...&#10;Example:&#10;SN:ABC123 | Activated: 2025-02-01 | Status: OK&#10;SN:DEF456 | Mismatch | Line: 2"
+                                      placeholder="Paste your activation report, line checker logs, or serial validation data here...&#10;Example:&#10;Victoria-25&#10;89254021344261211100&#10;89254021344261211126&#10;...&#10;Each agent line: AgentName-XX (XX is the count)" 
                                       required></textarea>
                             <div class="form-text text-muted mt-1">
-                                Paste raw activation logs, line checker output or any report text for deep analysis.
+                                Paste raw activation logs with agent lines (e.g., <strong>Victoria-25</strong>) followed by 20‑digit serial numbers.
                             </div>
                         </div>
 
-                        <!-- action buttons row -->
+                        <!-- Action buttons -->
                         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4">
                             <button type="submit" class="btn-primary-custom btn">
                                 <i class="bi bi-graph-up"></i> Process Report
@@ -344,12 +382,12 @@
                 </div>
             </div>
 
-            
+         
         </div>
     </div>
 </div>
 
-<!-- loading overlay : elegant processing state -->
+<!-- Loader overlay -->
 <div class="loader-overlay" id="loader">
     <div class="loader-content">
         <div class="spinner-border" role="status">
@@ -366,7 +404,8 @@
     </div>
 </div>
 
-<!-- JavaScript for loader display and improved ux -->
+<!-- JavaScript for loader and validation -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     (function() {
         const form = document.getElementById('reportForm');
@@ -374,49 +413,50 @@
 
         if (form) {
             form.addEventListener('submit', function(e) {
-                // additional validation: ensure at least file or report text is not empty
                 const fileInput = form.querySelector('input[name="excel_file"]');
                 const reportTextarea = form.querySelector('textarea[name="report_text"]');
-                
+                const dateInput = form.querySelector('input[name="report_date"]');
+                const groupInput = form.querySelector('input[name="group_name"]');
+                const totalInput = form.querySelector('input[name="declared_total"]');
+
                 let hasError = false;
-                if (fileInput && (!fileInput.files || fileInput.files.length === 0)) {
-                    // we don't block because backend will catch it, but for nicer experience we show quick alert?
-                    // Actually default required attribute will handle but ensure custom style
-                    if (!fileInput.value) {
-                        e.preventDefault();
-                        showTemporaryMessage('Please select an Excel file before processing.', 'warning');
-                        hasError = true;
-                    }
+                if (!fileInput.value) {
+                    e.preventDefault();
+                    showTemporaryMessage('Please select an Excel file.', 'warning');
+                    hasError = true;
                 }
-                if (!hasError && reportTextarea && !reportTextarea.value.trim()) {
+                if (!hasError && !reportTextarea.value.trim()) {
                     e.preventDefault();
                     showTemporaryMessage('Please paste the activation report text.', 'warning');
                     hasError = true;
                 }
-                
-                if (!hasError && loaderDiv) {
-                    // Show loader overlay with nice fade effect
-                    loaderDiv.style.display = 'flex';
-                    // optional: make sure body scroll is not affected
-                    document.body.style.overflow = 'hidden';
-                    // small timeout to ensure UI gets loader before heavy processing
-                    setTimeout(() => {
-                        // nothing else, submit continues
-                    }, 20);
-                }
-                // If there's an error we prevent from showing loader
-                if (hasError) {
+                if (!hasError && !dateInput.value) {
                     e.preventDefault();
+                    showTemporaryMessage('Please select a report date.', 'warning');
+                    hasError = true;
+                }
+                if (!hasError && !groupInput.value.trim()) {
+                    e.preventDefault();
+                    showTemporaryMessage('Please enter a group name.', 'warning');
+                    hasError = true;
+                }
+                if (!hasError && (!totalInput.value || parseInt(totalInput.value) < 0)) {
+                    e.preventDefault();
+                    showTemporaryMessage('Please enter a valid declared total (0 or more).', 'warning');
+                    hasError = true;
+                }
+
+                if (!hasError && loaderDiv) {
+                    loaderDiv.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
                 }
             });
         }
 
-        // small helper for dynamic error/info messages if validation fails (no backend needed)
         function showTemporaryMessage(msg, type = 'danger') {
-            // check for existing alert container or create one nicely
-            const existingAlert = document.querySelector('.dynamic-form-alert');
-            if (existingAlert) existingAlert.remove();
-            
+            const existing = document.querySelector('.dynamic-form-alert');
+            if (existing) existing.remove();
+
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type === 'warning' ? 'warning' : 'danger'} alert-dismissible fade show dynamic-form-alert`;
             alertDiv.style.borderRadius = '20px';
@@ -434,48 +474,39 @@
             } else {
                 document.querySelector('.card-body-custom')?.prepend(alertDiv);
             }
-            // auto dismiss after 4 seconds
+
             setTimeout(() => {
-                if(alertDiv) alertDiv.remove();
+                if (alertDiv) alertDiv.remove();
             }, 4500);
-            
-            // initialize bootstrap alert close if Bootstrap loaded
+
             if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
                 new bootstrap.Alert(alertDiv);
             } else {
-                // fallback manual close
                 const closeBtn = alertDiv.querySelector('.btn-close');
                 if (closeBtn) {
                     closeBtn.addEventListener('click', () => alertDiv.remove());
                 }
             }
         }
-        
-        // If any backend error appears we hide loader on page load (if error flash from jinja)
-        // if there is error, we make sure loader isn't stuck. 
-        // also handle page load: if there is any error present already due to previous post, loader should be hidden
+
+        // Hide loader on page load if error present
         window.addEventListener('load', function() {
             const errorPresent = document.querySelector('.alert-custom');
             if (errorPresent && loaderDiv) {
                 loaderDiv.style.display = 'none';
                 document.body.style.overflow = '';
             }
-            // Also attach reset if browser back/forward
             if (loaderDiv && loaderDiv.style.display === 'flex') {
                 loaderDiv.style.display = 'none';
                 document.body.style.overflow = '';
             }
         });
-        
-        // Avoid showing loader if form is resubmitted via back (safety)
+
         if (window.performance && window.performance.navigation && window.performance.navigation.type === 2) {
             if (loaderDiv) loaderDiv.style.display = 'none';
             document.body.style.overflow = '';
         }
     })();
 </script>
-
-<!-- Bootstrap JS for optional alert interactions (optional but adds robustness) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
