@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Report History</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        body{
+            background:#f4f7fb;
+        }
+
+        .card-shadow{
+            border:none;
+            border-radius:15px;
+            box-shadow:0 4px 20px rgba(0,0,0,.08);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container py-4">
+
+    <h2 class="mb-4">📅 Report History</h2>
+
+    <!-- SEARCH CARD -->
+    <div class="card card-shadow mb-4">
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <label class="form-label">Select Report Date</label>
+
+                <select name="report_date" class="form-control" required>
+
+                    <option value="">-- Choose Date --</option>
+
+                    {% for d in dates %}
+                        <option value="{{ d }}"
+                            {% if selected_date == d %}selected{% endif %}>
+                            {{ d }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                <button class="btn btn-primary mt-3">
+                    Search
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- SELECTED DATE INFO -->
+    {% if selected_date %}
+
+        <div class="alert alert-info">
+            Showing results for: <strong>{{ selected_date }}</strong>
+        </div>
+
+    {% endif %}
+
+    <!-- REPORTS -->
+    {% if reports %}
+
+        <div class="card card-shadow mb-4">
+
+            <div class="card-body">
+
+                <h5>Reports Found</h5>
+
+                <ul class="list-group">
+
+                    {% for r in reports %}
+
+                        <li class="list-group-item">
+
+                            <strong>{{ r.group_name }}</strong><br>
+
+                            <small>
+                                Declared: {{ r.declared_total }} |
+                                Actual: {{ r.actual_total }} |
+                                Created: {{ r.created_at }}
+                            </small>
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    <!-- DETAILS TABLE -->
+    {% if details %}
+
+        <div class="card card-shadow">
+
+            <div class="card-body">
+
+                <h5 class="mb-3">Serial Details</h5>
+
+                <table class="table table-bordered table-striped">
+
+                    <thead class="table-dark">
+
+                        <tr>
+                            <th>Report Date</th>
+                            <th>Group</th>
+                            <th>Agent</th>
+                            <th>Serial Number</th>
+                            <th>Usage</th>
+                            <th>Commission</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for d in details %}
+
+                        <tr>
+
+                            <td>{{ d.report_date }}</td>
+                            <td>{{ d.group_name }}</td>
+                            <td>{{ d.agent_name }}</td>
+                            <td>{{ d.serial_number }}</td>
+                            <td>{{ d.usage }}</td>
+                            <td>{{ d.commission }}</td>
+                            <td>{{ d.status }}</td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        {% if selected_date %}
+
+            <div class="alert alert-warning">
+                No records found for this date.
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

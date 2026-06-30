@@ -1,146 +1,70 @@
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 import os
 
-
 def generate_word_report(
-    filepath,
+    filepath,               # folder where the .docx will be saved
     report_date,
     group_name,
     declared_total,
     actual_total,
     tally_match,
-    summary,
-    results
+    summary,                # list of dicts from build_summary()
+    results                 # not used in compact version (kept for compatibility)
 ):
-
+    """
+    Generates a one‑page Word report with a compact summary per agent.
+    """
     doc = Document()
 
-    # =========================
-    # TITLE
-    # =========================
-    doc.add_heading(
-        'QUALITY VERIFICATION REPORT',
-        level=1
-    )
+    # ---- Company header ----
+    heading = doc.add_heading("Claypole Trading Ltd", level=1)
+    heading.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
+    # ---- Report title ----
+    title = doc.add_heading("QUALITY VERIFICATION REPORT", level=2)
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    # ---- Metadata ----
     doc.add_paragraph(f"Date: {report_date}")
     doc.add_paragraph(f"Group: {group_name}")
+    doc.add_paragraph(f"Declared Total: {declared_total}")
+    doc.add_paragraph(f"Actual Total: {actual_total}")
+    doc.add_paragraph(f"Tally Status: {'MATCH' if tally_match else 'MISMATCH'}")
+    doc.add_paragraph()  # blank line
 
-    doc.add_paragraph(
-        f"Declared Total: {declared_total}"
-    )
+    # ---- Compact agent table ----
+    # Header row
+    table = doc.add_table(rows=1, cols=4)
+    table.style = 'Light Grid Accent 1'   # clean, modern style
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = 'Agent'
+    hdr_cells[1].text = 'Total Submitted'
+    hdr_cells[2].text = 'Non‑Quality Serials (last 5)'
+    hdr_cells[3].text = 'Not Found Serials (last 5)'
 
-    doc.add_paragraph(
-        f"Actual Total: {actual_total}"
-    )
+    # Populate rows from summary
+    for agent_info in summary:
+        agent = agent_info['agent']
+        total = agent_info['total']
+        non_quality_serials = agent_info.get('non_quality_serials', [])
+        not_found_serials = agent_info.get('not_found_serials', [])
 
-    doc.add_paragraph(
-        "Tally Status: "
-        + ("MATCH" if tally_match else "MISMATCH")
-    )
-
-    doc.add_paragraph("")
-
-    # =========================
-    # SUMMARY SECTION
-    # =========================
-    doc.add_heading(
-        'SUMMARY (BY AGENT)',
-        level=2
-    )
-
-    for s in summary:
-
-        doc.add_heading(
-            s['agent'],
-            level=3
-        )
-
-        doc.add_paragraph(
-            f"Total Submitted: {s['total']}"
-        )
-
-        doc.add_paragraph(
-            f"Quality: {s['quality']}"
-        )
-
-        doc.add_paragraph(
-            f"Non Quality: {s['non_quality']}"
-        )
-
-        doc.add_paragraph(
-            f"Not Found: {s['not_found']}"
-        )
-
-        # Non quality serials
-        nq = ", ".join(
-            s.get('non_quality_serials', [])
-        )
-
-        nf = ", ".join(
-            s.get('not_found_serials', [])
-        )
-
-        doc.add_paragraph(
-            "Non Quality Serial Ends: "
-            + (nq if nq else "None")
-        )
-
-        doc.add_paragraph(
-            "Not Found Serial Ends: "
-            + (nf if nf else "None")
-        )
-
-        doc.add_paragraph("")
-
-    # =========================
-    # DETAILED TABLE
-    # =========================
-    doc.add_heading(
-        'DETAILED RESULTS',
-        level=2
-    )
-
-    table = doc.add_table(
-        rows=1,
-        cols=5
-    )
-
-    table.style = 'Table Grid'
-
-    hdr = table.rows[0].cells
-
-    hdr[0].text = "Agent"
-    hdr[1].text = "Serial Number"
-    hdr[2].text = "Usage"
-    hdr[3].text = "Commission"
-    hdr[4].text = "Status"
-
-    for r in results:
+        nq_str = ', '.join(non_quality_serials) if non_quality_serials else 'None'
+        nf_str = ', '.join(not_found_serials) if not_found_serials else 'None'
 
         row_cells = table.add_row().cells
+        row_cells[0].text = agent
+        row_cells[1].text = str(total)
+        row_cells[2].text = nq_str
+        row_cells[3].text = nf_str
 
-        row_cells[0].text = str(r['Agent'])
-        row_cells[1].text = str(r['Serial Number'])
-        row_cells[2].text = str(r['Usage'])
-        row_cells[3].text = str(r['Commission'])
-        row_cells[4].text = str(r['Status'])
-
-    # =========================
-    # SAVE FILE
-    # =========================
-
+    # ---- Save the document ----
+    os.makedirs(filepath, exist_ok=True)
     safe_group = group_name.replace(" ", "_")
     safe_date = report_date.replace("/", "-")
-
     filename = f"{safe_group}_{safe_date}.docx"
-
-    full_path = os.path.join(
-        filepath,
-        filename
-    )
-
+    full_path = os.path.join(filepath, filename)
     doc.save(full_path)
-
     return full_path

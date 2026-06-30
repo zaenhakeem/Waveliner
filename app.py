@@ -165,12 +165,12 @@ def build_summary(results_df):
             'not_found':   len(agent_df[not_found_mask]),
 
             'non_quality_serials': [
-                str(x)[-5:]
+                str(x)[-6:]
                 for x in agent_df[non_quality_mask]['Serial Number']
             ],
 
             'not_found_serials': [
-                str(x)[-5:]
+                str(x)[-6:]
                 for x in agent_df[not_found_mask]['Serial Number']
             ]
         })
@@ -427,6 +427,76 @@ def export(report_id):
     )
 
     return send_file(file_path, as_attachment=True)
+
+@app.route('/all-dates')
+def all_dates():
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, report_date, group_name, created_at
+        FROM reports
+        ORDER BY id DESC
+    """)
+
+    rows = cur.fetchall()
+    conn.close()
+
+    return render_template("all_dates.html", rows=rows)
+
+@app.route('/history', methods=['GET', 'POST'])
+def history():
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Get all unique dates for dropdown
+    cur.execute("""
+        SELECT DISTINCT report_date
+        FROM reports
+        ORDER BY id DESC
+    """)
+    dates = [r['report_date'] for r in cur.fetchall()]
+
+    selected_date = None
+    reports = []
+    details = []
+
+    if request.method == 'POST':
+
+        selected_date = request.form['report_date']
+
+        cur.execute("""
+            SELECT * FROM reports
+            WHERE report_date = ?
+            ORDER BY id DESC
+        """, (selected_date,))
+
+        reports = cur.fetchall()
+
+        if reports:
+            report_ids = [r['id'] for r in reports]
+            placeholders = ",".join(["?"] * len(report_ids))
+
+            cur.execute(f"""
+                SELECT d.*, r.report_date, r.group_name
+                FROM report_details d
+                JOIN reports r ON r.id = d.report_id
+                WHERE d.report_id IN ({placeholders})
+            """, report_ids)
+
+            details = cur.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "history.html",
+        dates=dates,
+        selected_date=selected_date,
+        reports=reports,
+        details=details
+    )
 
 
 init_db()

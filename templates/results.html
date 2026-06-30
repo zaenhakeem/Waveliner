@@ -1,395 +1,573 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>Quality Results</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Claypole Trading ltd | Quality Report Results</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-
-        body{
-            background:#f5f7fb;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .card-shadow{
-            border:none;
-            border-radius:15px;
-            box-shadow:0 4px 20px rgba(0,0,0,.08);
+        body {
+            background: #eef2f8;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 1.5rem 1rem;
         }
 
-        .stat-card{
-            border-radius:15px;
-            padding:20px;
-            color:white;
+        /* professional container */
+        .report-container {
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        .table td,
-        .table th{
-            vertical-align:middle;
+        /* brand header */
+        .brand-header {
+            background: #0B2B40;
+            border-radius: 28px 28px 0 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .accordion-button:not(.collapsed){
-            background:#e9f2ff;
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .badge-duplicate{
-            background:#6f42c1;
-            color:white;
+        .brand-title h3 {
+            margin: 0;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.3px;
+            font-size: 1.65rem;
         }
 
-        .badge-used{
-            background:#343a40;
-            color:white;
+        .brand-title span {
+            background: #F4C542;
+            color: #0B2B40;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
         }
 
+        .badge-company {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(2px);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            color: #F4C542;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        /* card design */
+        .card-modern {
+            background: #ffffff;
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+            transition: transform 0.1s ease;
+            overflow: hidden;
+        }
+
+        .card-modern .card-body {
+            padding: 1.5rem 2rem;
+        }
+
+        /* stats row modern */
+        .stat-card-premium {
+            border-radius: 24px;
+            padding: 1.4rem 1rem;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-card-premium h5 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .stat-card-premium h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin-bottom: 0;
+            line-height: 1.2;
+        }
+
+        /* badges refined */
+        .badge-quality-final {
+            background: #198754;
+            color: white;
+            padding: 0.45rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .badge-non-quality {
+            background: #ffc107;
+            color: #2c2c2c;
+            padding: 0.45rem 1rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .badge-notfound {
+            background: #dc3545;
+            color: white;
+            padding: 0.45rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        .badge-duplicate-final {
+            background: #6f42c1;
+            color: white;
+            padding: 0.4rem 0.9rem;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        .badge-used-final {
+            background: #2c3e50;
+            color: white;
+            padding: 0.4rem 0.9rem;
+            border-radius: 40px;
+        }
+
+        /* accordion premium */
+        .accordion-item-custom {
+            background: white;
+            border: 1px solid #e9edf2;
+            border-radius: 20px !important;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .accordion-button-custom {
+            background: #ffffff;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            font-size: 0.95rem;
+            border: none;
+            width: 100%;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .accordion-button-custom:not(.collapsed) {
+            background: #F9F5EB;
+            color: #0B2B40;
+            border-bottom: 1px solid #f0e3cc;
+        }
+
+        .accordion-button-custom:focus {
+            box-shadow: none;
+        }
+
+        .accordion-collapse-custom {
+            padding: 1.2rem 1.5rem;
+            background: #fefefe;
+        }
+
+        /* tables modern */
+        .table-modern {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .table-modern thead th {
+            background: #1A2F3F;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 1rem 1rem;
+            border: none;
+        }
+
+        .table-modern td {
+            padding: 0.9rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .table-modern tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-outline-premium {
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            border: 1.5px solid #dee2e6;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-premium:hover {
+            background: #0B2B40;
+            border-color: #0B2B40;
+            color: white;
+        }
+
+        .btn-export {
+            background: #F4C542;
+            border: none;
+            border-radius: 40px;
+            padding: 0.5rem 1.4rem;
+            font-weight: 600;
+            color: #1e2f3e;
+        }
+
+        .btn-export:hover {
+            background: #e0b03b;
+            transform: translateY(-1px);
+        }
+
+        hr.divider-light {
+            margin: 1rem 0;
+            background: #e4e9f0;
+        }
+
+        .info-grid p {
+            margin-bottom: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .brand-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .card-modern .card-body {
+                padding: 1.2rem;
+            }
+            .stat-card-premium h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .print-friendly {
+            background: white;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .btn-export, .btn-outline-premium, .brand-header .badge-company {
+                display: none;
+            }
+            .brand-header {
+                background: #0B2B40;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .stat-card-premium {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        .agent-summary-tag {
+            background: #f0f3f8;
+            border-radius: 50px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
     </style>
-
 </head>
-
 <body>
-
-<div class="container py-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <h2>
-            <i class="bi bi-file-earmark-text"></i>
-            Quality Report Results
-        </h2>
-
-        <div>
-            <a href="/export/{{ report_id }}" class="btn btn-success me-2">
-                Export Word
-            </a>
-
-            <a href="/" class="btn btn-secondary">
-                New Report
-            </a>
+<div class="report-container">
+    <!-- Claypole Trading ltd header - prominent branding -->
+    <div class="brand-header">
+        <div class="brand-title">
+            <i class="bi bi-clipboard-data-fill" style="font-size: 1.8rem; color: #F4C542;"></i>
+            <h3>Claypole Trading ltd</h3>
+            <span>Quality Assurance Division</span>
         </div>
-
+        <div class="d-flex gap-2">
+            <div class="badge-company">
+                <i class="bi bi-check2-circle"></i> Precision Report
+            </div>
+        </div>
     </div>
 
-    <!-- REPORT INFO -->
-
-    <div class="card card-shadow mb-4">
-
+    <!-- main content card -->
+    <div class="card-modern mt-4">
         <div class="card-body">
-
-            <div class="row">
-
-                <div class="col-md-3">
-                    <strong>Date</strong><br>
-                    {{ report_date }}
+            <!-- top action row -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1" style="font-weight: 700; color: #0B2B40;">
+                        <i class="bi bi-bar-chart-steps me-2" style="color: #F4C542;"></i>
+                        Quality Line Checker · Results
+                    </h1>
+                    <p class="text-muted small mt-1">Detailed validation & serial integrity report</p>
                 </div>
-
-                <div class="col-md-3">
-                    <strong>Group</strong><br>
-                    {{ group_name }}
+                <div class="d-flex gap-2">
+                    <a href="/export/{{ report_id }}" class="btn btn-export">
+                        <i class="bi bi-file-word-fill me-1"></i> Export Word
+                    </a>
+                    <a href="/" class="btn btn-outline-premium">
+                        <i class="bi bi-plus-circle"></i> New Report
+                    </a>
                 </div>
-
-                <div class="col-md-3">
-                    <strong>Declared Total</strong><br>
-                    {{ declared_total }}
-                </div>
-
-                <div class="col-md-3">
-                    <strong>Actual Total</strong><br>
-                    {{ actual_total }}
-                </div>
-
             </div>
 
-            <hr>
-
-            {% if tally_match %}
-
-            <div class="alert alert-success mb-0">
-                <i class="bi bi-check-circle-fill"></i>
-                TALLY MATCHES
-            </div>
-
-            {% else %}
-
-            <div class="alert alert-danger mb-0">
-                <i class="bi bi-x-circle-fill"></i>
-                TALLY MISMATCH
-            </div>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-
-    <!-- SUMMARY CARDS -->
-
-    <div class="row mb-4">
-
-        <div class="col-md-4">
-
-            <div class="stat-card bg-success">
-
-                <h5>Total Quality</h5>
-
-                <h2>{{ quality_count }}</h2>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-            <div class="stat-card bg-warning text-dark">
-
-                <h5>Non Quality</h5>
-
-                <h2>{{ non_quality_count }}</h2>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-            <div class="stat-card bg-danger">
-
-                <h5>Not Found</h5>
-
-                <h2>{{ not_found_count }}</h2>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- AGENT ACCORDION -->
-
-    <h4 class="mb-3">Individual Agent Results</h4>
-
-    <div class="accordion mb-5" id="agentsAccordion">
-
-        {% for s in summary %}
-
-        <div class="accordion-item">
-
-            <h2 class="accordion-header">
-
-                <button class="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#agent{{ loop.index }}">
-
-                    <strong>{{ s.agent }}</strong>
-
-                    &nbsp;&nbsp;
-                    Total: {{ s.total }} |
-                    Q: {{ s.quality }} |
-                    NQ: {{ s.non_quality }} |
-                    NF: {{ s.not_found }}
-
-                </button>
-
-            </h2>
-
-            <div id="agent{{ loop.index }}" class="accordion-collapse collapse">
-
-                <div class="accordion-body">
-
-                    <div class="row mb-3">
-
-                        <div class="col-md-6">
-
-                            <strong>Non Quality:</strong><br>
-
-                            {% if s.non_quality_serials %}
-                                {{ s.non_quality_serials|join(', ') }}
-                            {% else %}
-                                None
-                            {% endif %}
-
+            <!-- REPORT INFO CARD (dynamic) -->
+            <div class="bg-light p-4 rounded-4 mb-4" style="background: #F9FAFE !important;">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar3 fs-5" style="color: #F4C542;"></i>
+                            <div><strong>Report Date</strong><br>{{ report_date }}</div>
                         </div>
-
-                        <div class="col-md-6">
-
-                            <strong>Not Found:</strong><br>
-
-                            {% if s.not_found_serials %}
-                                {{ s.not_found_serials|join(', ') }}
-                            {% else %}
-                                None
-                            {% endif %}
-
-                        </div>
-
                     </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-people fs-5" style="color: #F4C542;"></i>
+                            <div><strong>Group / Agent Pool</strong><br>{{ group_name }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clipboard-check fs-5" style="color: #F4C542;"></i>
+                            <div><strong>Declared Total</strong><br>{{ declared_total }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-database fs-5" style="color: #F4C542;"></i>
+                            <div><strong>Actual Total</strong><br>{{ actual_total }}</div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider-light my-3">
+                <div class="mt-2">
+                    {% if tally_match %}
+                    <div class="alert alert-success py-2 px-3 mb-0 d-inline-flex align-items-center gap-2 rounded-pill">
+                        <i class="bi bi-check-circle-fill"></i> TALLY MATCHES — Declaration & system records aligned
+                    </div>
+                    {% else %}
+                    <div class="alert alert-danger py-2 px-3 mb-0 d-inline-flex align-items-center gap-2 rounded-pill">
+                        <i class="bi bi-x-circle-fill"></i> TALLY MISMATCH — Investigation required
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
 
-                    <table class="table table-bordered table-hover">
+            <!-- KPI SUMMARY CARDS premium style -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="stat-card-premium bg-success text-white">
+                        <h5><i class="bi bi-check-lg me-1"></i> QUALITY SERIALS</h5>
+                        <h2>{{ quality_count }}</h2>
+                        <small class="opacity-75">Verified & compliant units</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-premium bg-warning text-dark">
+                        <h5><i class="bi bi-exclamation-triangle me-1"></i> NON QUALITY</h5>
+                        <h2>{{ non_quality_count }}</h2>
+                        <small>Deviation / reject status</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-premium bg-danger text-white">
+                        <h5><i class="bi bi-question-octagon me-1"></i> NOT FOUND</h5>
+                        <h2>{{ not_found_count }}</h2>
+                        <small>Missing from master dataset</small>
+                    </div>
+                </div>
+            </div>
 
-                        <thead class="table-dark">
+            <!-- AGENT ACCORDION (ELEGANT) -->
+            <div class="mb-5">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-diagram-3 fs-4" style="color: #0B2B40;"></i>
+                    <h4 class="mb-0" style="font-weight: 700;">Agent Performance Analysis</h4>
+                </div>
+                <div class="accordion" id="agentsAccordion">
+                    {% for s in summary %}
+                    <div class="accordion-item-custom mb-3 border rounded-4">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button-custom collapsed d-flex justify-content-between align-items-center" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#agentCollapse{{ loop.index }}" 
+                                    aria-expanded="false">
+                                <span><strong><i class="bi bi-person-badge me-2"></i>{{ s.agent }}</strong></span>
+                                <span class="agent-summary-tag ms-2">
+                                    Total: {{ s.total }} | Q: {{ s.quality }} | NQ: {{ s.non_quality }} | NF: {{ s.not_found }}
+                                </span>
+                            </button>
+                        </h2>
+                        <div id="agentCollapse{{ loop.index }}" class="accordion-collapse collapse" data-bs-parent="#agentsAccordion">
+                            <div class="accordion-collapse-custom">
+                                <!-- non quality + not found summaries -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <div class="p-3 bg-light rounded-3 h-100">
+                                            <strong class="text-warning-dark"><i class="bi bi-exclamation-diamond"></i> Non-Quality Serials</strong><br>
+                                            {% if s.non_quality_serials %}
+                                                <span class="small">{{ s.non_quality_serials|join(', ') }}</span>
+                                            {% else %}
+                                                <span class="text-muted fst-italic">— None recorded —</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 bg-light rounded-3 h-100">
+                                            <strong class="text-danger"><i class="bi bi-search"></i> Not Found Serials</strong><br>
+                                            {% if s.not_found_serials %}
+                                                <span class="small">{{ s.not_found_serials|join(', ') }}</span>
+                                            {% else %}
+                                                <span class="text-muted fst-italic">— All serials located —</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <tr>
-                            <th>Serial Number</th>
-                            <th>Usage</th>
-                            <th>Commission</th>
-                            <th>Status</th>
-                        </tr>
+                                <!-- detailed table per agent -->
+                                <div class="table-responsive">
+                                    <table class="table-modern table">
+                                        <thead>
+                                            <tr>
+                                                <th>Serial Number</th>
+                                                <th>Usage</th>
+                                                <th>Commission</th>
+                                                <th>Quality Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for row in results %}
+                                            {% if row.Agent == s.agent %}
+                                            <tr>
+                                                <td class="fw-mono">{{ row['Serial Number'] }}</td>
+                                                <td>{{ row.Usage }}</td>
+                                                <td>{{ row.Commission }}</td>
+                                                <td>
+                                                    {% if 'DUPLICATE' in row.Status %}
+                                                        <span class="badge-duplicate-final"><i class="bi bi-files"></i> {{ row.Status }}</span>
+                                                    {% elif 'ALREADY USED' in row.Status %}
+                                                        <span class="badge-used-final"><i class="bi bi-hourglass-split"></i> {{ row.Status }}</span>
+                                                    {% elif row.Status == 'QUALITY' %}
+                                                        <span class="badge-quality-final"><i class="bi bi-check-circle"></i> QUALITY</span>
+                                                    {% elif row.Status == 'NON QUALITY' %}
+                                                        <span class="badge-non-quality"><i class="bi bi-flag"></i> NON QUALITY</span>
+                                                    {% else %}
+                                                        <span class="badge-notfound"><i class="bi bi-file-earmark-x"></i> NOT FOUND</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
 
-                        </thead>
-
-                        <tbody>
-
-                        {% for row in results %}
-
-                            {% if row.Agent == s.agent %}
-
+            <!-- FULL DETAILED RESULTS table with premium styling -->
+            <div class="card-modern mt-3" style="box-shadow: none; border: 1px solid #eef2f6;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                        <h4 class="fw-bold mb-0"><i class="bi bi-table me-2"></i> Full Detailed Results</h4>
+                        <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill px-4">
+                            <i class="bi bi-printer"></i> Print Report
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table-modern table">
+                            <thead>
+                                <tr>
+                                    <th>Agent</th>
+                                    <th>Serial</th>
+                                    <th>Usage</th>
+                                    <th>Commission</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in results %}
                             <tr>
-
-                                <td>{{ row['Serial Number'] }}</td>
+                                <td class="fw-semibold">{{ row.Agent }}</td>
+                                <td><code>{{ row['Serial Number'] }}</code></td>
                                 <td>{{ row.Usage }}</td>
                                 <td>{{ row.Commission }}</td>
-
                                 <td>
-
                                     {% if 'DUPLICATE' in row.Status %}
-
-                                        <span class="badge badge-duplicate">
-                                            {{ row.Status }}
-                                        </span>
-
+                                        <span class="badge-duplicate-final"><i class="bi bi-files"></i> {{ row.Status }}</span>
                                     {% elif 'ALREADY USED' in row.Status %}
-
-                                        <span class="badge badge-used">
-                                            {{ row.Status }}
-                                        </span>
-
+                                        <span class="badge-used-final"><i class="bi bi-clock-history"></i> {{ row.Status }}</span>
                                     {% elif row.Status == 'QUALITY' %}
-
-                                        <span class="badge bg-success">QUALITY</span>
-
+                                        <span class="badge-quality-final"><i class="bi bi-check-lg"></i> QUALITY</span>
                                     {% elif row.Status == 'NON QUALITY' %}
-
-                                        <span class="badge bg-warning text-dark">NON QUALITY</span>
-
+                                        <span class="badge-non-quality"><i class="bi bi-exclamation-lg"></i> NON QUALITY</span>
                                     {% else %}
-
-                                        <span class="badge bg-danger">NOT FOUND</span>
-
+                                        <span class="badge-notfound"><i class="bi bi-database-slash"></i> NOT FOUND</span>
                                     {% endif %}
-
                                 </td>
-
                             </tr>
-
-                            {% endif %}
-
-                        {% endfor %}
-
-                        </tbody>
-
-                    </table>
-
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if results|length == 0 %}
+                    <div class="alert alert-info text-center">No detailed records available.</div>
+                    {% endif %}
                 </div>
-
             </div>
 
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-    <!-- FULL TABLE -->
-
-    <div class="card card-shadow">
-
-        <div class="card-body">
-
-            <div class="d-flex justify-content-between mb-3">
-
-                <h4>Full Detailed Results</h4>
-
-                <button onclick="window.print()" class="btn btn-dark">
-                    Print Report
-                </button>
-
+            <!-- footer / claypole signature -->
+            <div class="mt-5 pt-2 border-top text-center text-muted small">
+                <i class="bi bi-dot"></i> Claypole Trading ltd — Quality Line Integrity Platform 
+                <i class="bi bi-dot"></i> Certified report · Generated by automated system
             </div>
-
-            <table class="table table-striped table-bordered">
-
-                <thead class="table-dark">
-
-                <tr>
-                    <th>Agent</th>
-                    <th>Serial</th>
-                    <th>Usage</th>
-                    <th>Commission</th>
-                    <th>Status</th>
-                </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for row in results %}
-
-                <tr>
-
-                    <td>{{ row.Agent }}</td>
-                    <td>{{ row['Serial Number'] }}</td>
-                    <td>{{ row.Usage }}</td>
-                    <td>{{ row.Commission }}</td>
-
-                    <td>
-
-                        {% if 'DUPLICATE' in row.Status %}
-
-                            <span class="badge badge-duplicate">
-                                {{ row.Status }}
-                            </span>
-
-                        {% elif 'ALREADY USED' in row.Status %}
-
-                            <span class="badge badge-used">
-                                {{ row.Status }}
-                            </span>
-
-                        {% elif row.Status == 'QUALITY' %}
-
-                            <span class="badge bg-success">QUALITY</span>
-
-                        {% elif row.Status == 'NON QUALITY' %}
-
-                            <span class="badge bg-warning text-dark">NON QUALITY</span>
-
-                        {% else %}
-
-                            <span class="badge bg-danger">NOT FOUND</span>
-
-                        {% endif %}
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
         </div>
-
     </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+<script>
+    // enhance accordion icons optionally, but keep behavior clean
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.accordion-button-custom');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                if (!expanded) {
+                    // any interactive preload? fine
+                }
+            });
+        });
+    });
+</script>
 </body>
-
 </html>
